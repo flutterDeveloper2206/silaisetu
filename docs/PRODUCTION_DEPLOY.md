@@ -99,12 +99,12 @@ Never commit `.env` or real secrets.
 
 1. Open **Chrome** → https://dash.cloudflare.com → **Workers & Pages** → Create → Pages → Connect to Git.
 2. Select `flutterDeveloper2206/silaisetu`.
-3. Build settings:
-   - **Root directory:** `frontend`
-   - **Build command:** `npm ci && npm run build`
-   - **Build output directory:** `dist`
+3. Build settings (leave **Root directory empty** — avoids Cloudflare “v2 root directory” missing `package-lock.json`):
+   - **Root directory:** *(blank)*
+   - **Build command:** `cd frontend && npm install && npm run build`
+   - **Build output directory:** `frontend/dist`
 4. Environment variable:
-   - `VITE_API_URL` = `https://YOUR_SERVICE.onrender.com/api/v1`
+   - `VITE_API_URL` = `https://silaisetu.onrender.com/api/v1`
 5. Deploy. Open the `*.pages.dev` URL and smoke-test register / sign-in.
 
 See [`frontend/.env.production.example`](../frontend/.env.production.example).
