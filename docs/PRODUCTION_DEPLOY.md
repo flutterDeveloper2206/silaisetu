@@ -11,7 +11,7 @@ No Android / Play Store upload.
 | API | https://silaisetu.onrender.com/api/v1 |
 | Swagger | https://silaisetu.onrender.com/docs |
 | Health | https://silaisetu.onrender.com/api/v1/health |
-| Web | `https://YOUR_PAGES.pages.dev` (Cloudflare — next) |
+| Web | https://silaisetu.pages.dev |
 | Database | Neon project `raspy-cloud-55647884` |
 
 ## Secrets (local only)
@@ -113,11 +113,11 @@ See [`frontend/.env.production.example`](../frontend/.env.production.example).
 
 ## 5. Smoke checklist
 
-- [ ] Web loads over HTTPS
+- [x] Web loads over HTTPS — https://silaisetu.pages.dev
 - [ ] Register / sign-in against live API + Neon
 - [ ] Create a customer and an order
-- [ ] API health + Swagger reachable
-- [ ] Update the **Live URLs** table at the top of this file
+- [x] API health + Swagger reachable — https://silaisetu.onrender.com/api/v1/health
+- [x] **Live URLs** table updated
 
 ---
 
