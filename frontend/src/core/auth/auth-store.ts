@@ -49,7 +49,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user: get().user });
   },
   login: async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password });
+    const { data } = await api.post('/auth/login', {
+      email: email.trim().toLowerCase(),
+      password,
+    });
     setAccessToken(data.accessToken);
     if (data.refreshToken) sessionStorage.setItem('ss_refresh', data.refreshToken);
     const shop = data.user.memberships?.[0]?.shop?.id;

@@ -2,15 +2,17 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../core/api/client';
+import { getApiErrorMessage } from '../../core/api/errors';
 import { useAuthStore } from '../../core/auth/auth-store';
 import { brand } from '../../core/config/brand';
+import { toastError } from '../../core/ui/toast';
 
 export function PlatformLoginPage() {
   const { t } = useTranslation();
   const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@silaisetu.local');
-  const [password, setPassword] = useState('ChangeMe_Admin_123!');
+  const [email, setEmail] = useState('admin@silaisetu.com');
+  const [password, setPassword] = useState('SilaiSetu_Admin_2026!');
   const [error, setError] = useState('');
 
   async function onSubmit(e: FormEvent) {
@@ -19,12 +21,16 @@ export function PlatformLoginPage() {
     try {
       const user = await login(email, password);
       if (!user.isPlatformAdmin) {
-        setError('Platform administrator access required');
+        const msg = 'Platform administrator access required';
+        setError(msg);
+        toastError(msg, t('auth.platformLogin'));
         return;
       }
       navigate('/platform-admin');
-    } catch {
-      setError(t('common.error'));
+    } catch (err) {
+      const msg = getApiErrorMessage(err, t('common.error'));
+      setError(msg);
+      toastError(msg, t('auth.platformLogin'));
     }
   }
 

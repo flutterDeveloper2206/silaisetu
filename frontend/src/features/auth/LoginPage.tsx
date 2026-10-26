@@ -3,13 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { brand } from '../../core/config/brand';
 import { useAuthStore } from '../../core/auth/auth-store';
+import { getApiErrorMessage } from '../../core/api/errors';
+import { toastError } from '../../core/ui/toast';
 
 export function LoginPage() {
   const { t } = useTranslation();
   const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
-  const [email, setEmail] = useState('owner1@silaisetu.local');
-  const [password, setPassword] = useState('OwnerDemo_123!');
+  const [email, setEmail] = useState('owner@silaisetu.com');
+  const [password, setPassword] = useState('SilaiSetu_Owner_2026!');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,8 +23,10 @@ export function LoginPage() {
       const user = await login(email, password);
       if (!user.memberships?.length) navigate('/onboarding');
       else navigate('/app');
-    } catch {
-      setError(t('common.error'));
+    } catch (err) {
+      const msg = getApiErrorMessage(err, t('common.error'));
+      setError(msg);
+      toastError(msg, t('auth.login'));
     } finally {
       setLoading(false);
     }

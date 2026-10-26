@@ -2,6 +2,8 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../core/auth/auth-store';
+import { getApiErrorMessage } from '../../core/api/errors';
+import { toastError } from '../../core/ui/toast';
 
 export function RegisterPage() {
   const { t } = useTranslation();
@@ -20,8 +22,10 @@ export function RegisterPage() {
     try {
       await register({ email, password, fullName });
       navigate('/onboarding');
-    } catch {
-      setError(t('common.error'));
+    } catch (err) {
+      const msg = getApiErrorMessage(err, t('common.error'));
+      setError(msg);
+      toastError(msg, t('auth.register'));
     } finally {
       setLoading(false);
     }
