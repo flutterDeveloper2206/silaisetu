@@ -2,9 +2,10 @@ services:
   - type: web
     name: silaisetu-api
     runtime: docker
-    rootDir: backend
+    # Dockerfile at repo root (monorepo); also works if Root Directory is blank
     plan: free
     healthCheckPath: /api/v1/health
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
