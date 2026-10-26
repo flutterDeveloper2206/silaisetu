@@ -19,3 +19,5 @@ frontend/.env
 *.log
 *.jks
 *.keystore
+docs/PRODUCTION_SECRETS.local.md
+**/*.local.md

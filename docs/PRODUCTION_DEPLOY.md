@@ -12,7 +12,12 @@ No Android / Play Store upload.
 | Swagger | `https://YOUR_SERVICE.onrender.com/docs` |
 | Health | `https://YOUR_SERVICE.onrender.com/api/v1/health` |
 | Web | `https://YOUR_PAGES.pages.dev` |
-| Database | Neon project `silaisetu` (connection string in Render only) |
+| Database | Neon project `raspy-cloud-55647884` |
+
+## Secrets (local only)
+
+Passwords, JWT secrets, and `DATABASE_URL` are stored in **[`PRODUCTION_SECRETS.local.md`](PRODUCTION_SECRETS.local.md)** on your machine.  
+That file is **gitignored** — never push it to GitHub. Use it when filling Render / Cloudflare env vars.
 
 ## Free-tier limits
 
