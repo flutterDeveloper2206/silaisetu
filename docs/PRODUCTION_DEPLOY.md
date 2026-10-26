@@ -8,10 +8,10 @@ No Android / Play Store upload.
 | Layer | URL |
 | --- | --- |
 | GitHub | https://github.com/flutterDeveloper2206/silaisetu |
-| API | `https://YOUR_SERVICE.onrender.com/api/v1` |
-| Swagger | `https://YOUR_SERVICE.onrender.com/docs` |
-| Health | `https://YOUR_SERVICE.onrender.com/api/v1/health` |
-| Web | `https://YOUR_PAGES.pages.dev` |
+| API | https://silaisetu.onrender.com/api/v1 |
+| Swagger | https://silaisetu.onrender.com/docs |
+| Health | https://silaisetu.onrender.com/api/v1/health |
+| Web | `https://YOUR_PAGES.pages.dev` (Cloudflare — next) |
 | Database | Neon project `raspy-cloud-55647884` |
 
 ## Secrets (local only)
