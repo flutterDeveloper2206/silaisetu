@@ -91,7 +91,13 @@ Never commit `.env` or real secrets.
 5. Deploy. Confirm:
    - `GET /api/v1/health` → `status: ok` / database ok
    - `/docs` Swagger loads
-6. Optional one-time seed (Render shell): `npx prisma db seed` with `PLATFORM_ADMIN_*` set.
+6. **Seed demo users** (required once after first migrate). From a machine with `DATABASE_URL` pointing at Neon:
+
+   ```bash
+   cd backend && export DATABASE_URL='…neon…' && npx prisma migrate deploy && npx prisma db seed
+   ```
+
+   Demo login: `owner1@silaisetu.local` / `OwnerDemo_123!`
 
 ---
 
