@@ -1,0 +1,78 @@
+{
+  "brand": {
+    "name": "SilaiSetu",
+    "tagline": "તમારો ટેલરિંગ વ્યવસાય, જોડાયેલ."
+  },
+  "nav": {
+    "dashboard": "ડેશબોર્ડ",
+    "customers": "ગ્રાહકો",
+    "orders": "ઓર્ડર",
+    "templates": "ટેમ્પલેટ",
+    "measurements": "માપ",
+    "payments": "ચુકવણી",
+    "calendar": "કેલેન્ડર",
+    "reports": "રિપોર્ટ",
+    "staff": "સ્ટાફ",
+    "settings": "સેટિંગ્સ",
+    "notifications": "સૂચનાઓ",
+    "logout": "લૉગ આઉટ"
+  },
+  "auth": {
+    "login": "સાઇન ઇન",
+    "register": "એકાઉન્ટ બનાવો",
+    "email": "ઈમેલ",
+    "password": "પાસવર્ડ",
+    "fullName": "પૂરું નામ",
+    "noAccount": "નવા છો?",
+    "hasAccount": "પહેલેથી એકાઉન્ટ છે?",
+    "platformLogin": "પ્લેટફોર્મ એડમિન સાઇન ઇન"
+  },
+  "common": {
+    "loading": "લોડ થઈ રહ્યું છે…",
+    "empty": "હજુ કંઈ નથી",
+    "error": "કંઈક ખોટું થયું",
+    "retry": "ફરી પ્રયાસ",
+    "save": "સેવ",
+    "search": "શોધો",
+    "create": "બનાવો",
+    "language": "ભાષા",
+    "theme": "થીમ",
+    "light": "લાઇટ",
+    "dark": "ડાર્ક",
+    "system": "સિસ્ટમ"
+  },
+  "dashboard": {
+    "title": "આજે દુકાનમાં",
+    "todayDeliveries": "આજની ડિલિવરી",
+    "overdue": "ઓવરડ્યુ",
+    "pipeline": "કામની પાઇપલાઇન"
+  },
+  "customers": {
+    "title": "ગ્રાહકો",
+    "add": "ગ્રાહક ઉમેરો",
+    "phone": "ફોન",
+    "name": "નામ"
+  },
+  "orders": {
+    "title": "ઓર્ડર",
+    "status": "સ્થિતિ",
+    "balance": "બાકી રકમ",
+    "delivery": "ડિલિવરી"
+  },
+  "platform": {
+    "dashboard": "પ્લેટફોર્મ ડેશબોર્ડ",
+    "shops": "દુકાનો",
+    "users": "વપરાશકર્તાઓ",
+    "audit": "ઓડિટ લૉગ",
+    "settings": "સેટિંગ્સ",
+    "health": "સિસ્ટમ હેલ્થ",
+    "suspend": "સસ્પેન્ડ",
+    "activate": "સક્રિય",
+    "reason": "કારણ"
+  },
+  "onboarding": {
+    "title": "તમારી દુકાન બનાવો",
+    "shopName": "દુકાનનું નામ",
+    "continue": "આગળ"
+  }
+}

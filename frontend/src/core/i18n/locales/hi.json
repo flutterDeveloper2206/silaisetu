@@ -1,0 +1,75 @@
+{
+  "brand": { "name": "SilaiSetu", "tagline": "आपका टेलरिंग व्यवसाय, जुड़ा हुआ।" },
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "customers": "ग्राहक",
+    "orders": "ऑर्डर",
+    "templates": "टेम्पलेट",
+    "measurements": "नाप",
+    "payments": "भुगतान",
+    "calendar": "कैलेंडर",
+    "reports": "रिपोर्ट",
+    "staff": "स्टाफ",
+    "settings": "सेटिंग्स",
+    "notifications": "सूचनाएँ",
+    "logout": "लॉग आउट"
+  },
+  "auth": {
+    "login": "साइन इन",
+    "register": "खाता बनाएँ",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "fullName": "पूरा नाम",
+    "noAccount": "नए हैं?",
+    "hasAccount": "पहले से खाता है?",
+    "platformLogin": "प्लेटफ़ॉर्म एडमिन साइन इन"
+  },
+  "common": {
+    "loading": "लोड हो रहा है…",
+    "empty": "अभी कुछ नहीं",
+    "error": "कुछ गलत हुआ",
+    "retry": "फिर से कोशिश",
+    "save": "सेव",
+    "search": "खोजें",
+    "create": "बनाएँ",
+    "language": "भाषा",
+    "theme": "थीम",
+    "light": "लाइट",
+    "dark": "डार्क",
+    "system": "सिस्टम"
+  },
+  "dashboard": {
+    "title": "आज की दुकान",
+    "todayDeliveries": "आज की डिलीवरी",
+    "overdue": "ओवरड्यू",
+    "pipeline": "कार्य पाइपलाइन"
+  },
+  "customers": {
+    "title": "ग्राहक",
+    "add": "ग्राहक जोड़ें",
+    "phone": "फ़ोन",
+    "name": "नाम"
+  },
+  "orders": {
+    "title": "ऑर्डर",
+    "status": "स्थिति",
+    "balance": "बकाया",
+    "delivery": "डिलीवरी"
+  },
+  "platform": {
+    "dashboard": "प्लेटफ़ॉर्म डैशबोर्ड",
+    "shops": "दुकानें",
+    "users": "उपयोगकर्ता",
+    "audit": "ऑडिट लॉग",
+    "settings": "सेटिंग्स",
+    "health": "सिस्टम स्वास्थ्य",
+    "suspend": "सस्पेंड",
+    "activate": "सक्रिय",
+    "reason": "कारण"
+  },
+  "onboarding": {
+    "title": "अपनी दुकान बनाएँ",
+    "shopName": "दुकान का नाम",
+    "continue": "आगे बढ़ें"
+  }
+}

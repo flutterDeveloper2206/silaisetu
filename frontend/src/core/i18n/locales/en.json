@@ -1,0 +1,75 @@
+{
+  "brand": { "name": "SilaiSetu", "tagline": "Your Tailoring Business, Connected." },
+  "nav": {
+    "dashboard": "Dashboard",
+    "customers": "Customers",
+    "orders": "Orders",
+    "templates": "Templates",
+    "measurements": "Measurements",
+    "payments": "Payments",
+    "calendar": "Calendar",
+    "reports": "Reports",
+    "staff": "Staff",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "logout": "Log out"
+  },
+  "auth": {
+    "login": "Sign in",
+    "register": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "noAccount": "New to SilaiSetu?",
+    "hasAccount": "Already have an account?",
+    "platformLogin": "Platform admin sign in"
+  },
+  "common": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "save": "Save",
+    "search": "Search",
+    "create": "Create",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "dashboard": {
+    "title": "Today at the shop",
+    "todayDeliveries": "Today's deliveries",
+    "overdue": "Overdue",
+    "pipeline": "Work pipeline"
+  },
+  "customers": {
+    "title": "Customers",
+    "add": "Add customer",
+    "phone": "Phone",
+    "name": "Name"
+  },
+  "orders": {
+    "title": "Orders",
+    "status": "Status",
+    "balance": "Balance due",
+    "delivery": "Delivery"
+  },
+  "platform": {
+    "dashboard": "Platform dashboard",
+    "shops": "Shops",
+    "users": "Users",
+    "audit": "Audit logs",
+    "settings": "Settings",
+    "health": "System health",
+    "suspend": "Suspend",
+    "activate": "Activate",
+    "reason": "Reason"
+  },
+  "onboarding": {
+    "title": "Create your shop",
+    "shopName": "Shop name",
+    "continue": "Continue"
+  }
+}

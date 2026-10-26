@@ -1,0 +1,23 @@
+# SilaiSetu local PostgreSQL — no cloud hosting
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: silaisetu-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: silaisetu
+      POSTGRES_PASSWORD: silaisetu_dev_only
+      POSTGRES_DB: silaisetu
+    volumes:
+      - silaisetu_pg_data:/var/lib/postgresql/data
+      - ./docker/init-rls-role.sql:/docker-entrypoint-initdb.d/10-rls-role.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U silaisetu -d silaisetu"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  silaisetu_pg_data:
