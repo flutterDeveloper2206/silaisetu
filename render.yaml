@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: silaisetu-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_PREFIX
+        value: api/v1
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: AUTH_DEV_EXPOSE_CODES
+        value: "false"
+      - key: AUTH_REQUIRE_VERIFICATION
+        value: "false"
+      - key: THROTTLE_TTL_MS
+        value: "60000"
+      - key: THROTTLE_LIMIT
+        value: "100"
+      - key: APP_VERSION
+        value: "0.1.0"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
