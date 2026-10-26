@@ -43,16 +43,21 @@ async function main() {
     name: string,
     ownerEmail: string,
     ownerName: string,
+    ownerPhone: string,
   ) {
     const ownerHash = await bcrypt.hash('OwnerDemo_123!', 12);
     const owner = await prisma.user.upsert({
       where: { email: ownerEmail },
-      update: {},
+      update: {
+        passwordHash: ownerHash,
+        phone: ownerPhone,
+        emailVerifiedAt: new Date(),
+      },
       create: {
         email: ownerEmail,
         fullName: ownerName,
         passwordHash: ownerHash,
-        phone: '9876543210',
+        phone: ownerPhone,
         emailVerifiedAt: new Date(),
         languagePref: LanguageCode.gu,
       },
@@ -193,8 +198,20 @@ async function main() {
     return { shop, owner, customer, order };
   }
 
-  await seedShop('demo-ahmedabad', 'Demo Tailors Ahmedabad', 'owner1@silaisetu.local', 'Kiran Shah');
-  await seedShop('demo-surat', 'Demo Boutique Surat', 'owner2@silaisetu.local', 'Meera Desai');
+  await seedShop(
+    'demo-ahmedabad',
+    'Demo Tailors Ahmedabad',
+    'owner1@silaisetu.local',
+    'Kiran Shah',
+    '9876543210',
+  );
+  await seedShop(
+    'demo-surat',
+    'Demo Boutique Surat',
+    'owner2@silaisetu.local',
+    'Meera Desai',
+    '9876543211',
+  );
 
   await prisma.platformSettings.upsert({
     where: { key: 'support_email' },

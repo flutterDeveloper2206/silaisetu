@@ -1,0 +1,1 @@
+-- Historical placeholder (was empty); schema catch-up is in 20261026120000_auth_onboarding_columns
