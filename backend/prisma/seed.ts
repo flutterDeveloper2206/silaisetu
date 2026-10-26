@@ -14,10 +14,12 @@ const prisma = new PrismaClient();
 
 async function main() {
   const adminEmail =
-    process.env.PLATFORM_ADMIN_EMAIL || 'admin@silaisetu.local';
+    process.env.PLATFORM_ADMIN_EMAIL || 'admin@silaisetu.com';
   const adminPassword =
-    process.env.PLATFORM_ADMIN_PASSWORD || 'ChangeMe_Admin_123!';
+    process.env.PLATFORM_ADMIN_PASSWORD || 'SilaiSetu_Admin_2026!';
   const adminName = process.env.PLATFORM_ADMIN_NAME || 'Platform Admin';
+  const ownerPassword =
+    process.env.DEMO_OWNER_PASSWORD || 'SilaiSetu_Owner_2026!';
 
   const passwordHash = await bcrypt.hash(adminPassword, 12);
   const adminUser = await prisma.user.upsert({
@@ -45,7 +47,7 @@ async function main() {
     ownerName: string,
     ownerPhone: string,
   ) {
-    const ownerHash = await bcrypt.hash('OwnerDemo_123!', 12);
+    const ownerHash = await bcrypt.hash(ownerPassword, 12);
     const owner = await prisma.user.upsert({
       where: { email: ownerEmail },
       update: {
@@ -201,14 +203,14 @@ async function main() {
   await seedShop(
     'demo-ahmedabad',
     'Demo Tailors Ahmedabad',
-    'owner1@silaisetu.local',
+    process.env.DEMO_OWNER1_EMAIL || 'owner@silaisetu.com',
     'Kiran Shah',
     '9876543210',
   );
   await seedShop(
     'demo-surat',
     'Demo Boutique Surat',
-    'owner2@silaisetu.local',
+    process.env.DEMO_OWNER2_EMAIL || 'owner2@silaisetu.com',
     'Meera Desai',
     '9876543211',
   );
@@ -225,11 +227,15 @@ async function main() {
   // eslint-disable-next-line no-console
   console.log('Seed complete');
   // eslint-disable-next-line no-console
-  console.log(`Platform admin: ${adminEmail} / (PLATFORM_ADMIN_PASSWORD)`);
+  console.log(`Platform admin: ${adminEmail} / ${adminPassword}`);
   // eslint-disable-next-line no-console
-  console.log('Demo owners: owner1@silaisetu.local / OwnerDemo_123!');
+  console.log(
+    `Demo owners: ${process.env.DEMO_OWNER1_EMAIL || 'owner@silaisetu.com'} / ${ownerPassword}`,
+  );
   // eslint-disable-next-line no-console
-  console.log('             owner2@silaisetu.local / OwnerDemo_123!');
+  console.log(
+    `             ${process.env.DEMO_OWNER2_EMAIL || 'owner2@silaisetu.com'} / ${ownerPassword}`,
+  );
 }
 
 main()

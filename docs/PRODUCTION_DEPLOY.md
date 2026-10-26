@@ -16,8 +16,7 @@ No Android / Play Store upload.
 
 ## Secrets (local only)
 
-Passwords, JWT secrets, and `DATABASE_URL` are stored in **[`PRODUCTION_SECRETS.local.md`](PRODUCTION_SECRETS.local.md)** on your machine.  
-That file is **gitignored** — never push it to GitHub. Use it when filling Render / Cloudflare env vars.
+All passwords, JWT secrets, DB URL, and live URLs: **[`CREDENTIALS.local.md`](CREDENTIALS.local.md)** (gitignored — never push).
 
 ## Free-tier limits
 
