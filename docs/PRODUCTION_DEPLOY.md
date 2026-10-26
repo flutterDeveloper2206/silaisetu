@@ -71,9 +71,10 @@ Never commit `.env` or real secrets.
 1. Open **Chrome** → https://dashboard.render.com → sign in; connect GitHub.
 2. **New → Web Service** → select `flutterDeveloper2206/silaisetu`.
 3. Settings:
-   - **Root Directory:** `backend`
-   - **Runtime:** Docker (uses [`backend/Dockerfile`](../backend/Dockerfile))
-   - Or Native: Build `npm ci && npx prisma generate && npm run build`, Start `npx prisma migrate deploy && node dist/main`
+   - **Root Directory:** leave **empty** (uses repo-root [`Dockerfile`](../Dockerfile) that builds `backend/`)
+   - **Dockerfile Path:** `./Dockerfile` (default)
+   - **Runtime:** Docker
+   - Or Native with Root `backend`: Build `npm ci && npx prisma generate && npm run build`, Start `npx prisma migrate deploy && node dist/main`
 4. Environment (from [`backend/.env.production.example`](../backend/.env.production.example)):
 
    | Key | Value |

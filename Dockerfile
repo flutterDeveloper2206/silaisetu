@@ -2,17 +2,23 @@
 # Builds the Nest API from ./backend
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
-RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
-COPY backend/package.json backend/package-lock.json* ./
+# Need compilers for native modules (bcrypt); keep NODE_ENV unset so npm installs devDeps (nest build, prisma, typescript).
+RUN apt-get update -y \
+  && apt-get install -y openssl ca-certificates python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
+COPY backend/package.json backend/package-lock.json ./
 COPY backend/prisma ./prisma
-RUN npm ci
+# Render/Docker often sets NODE_ENV=production; force full install for nest/prisma/typescript.
+RUN npm ci --include=dev
 
 FROM node:20-bookworm-slim AS build
 WORKDIR /app
 RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 COPY --from=deps /app/node_modules ./node_modules
 COPY backend/ ./
-RUN npx prisma generate && npm run build && npm prune --omit=dev
+RUN npx prisma generate && npm run build \
+  && npm prune --omit=dev \
+  && npm install prisma@6.19.0 --omit=dev --no-save
 
 FROM node:20-bookworm-slim AS runner
 WORKDIR /app
