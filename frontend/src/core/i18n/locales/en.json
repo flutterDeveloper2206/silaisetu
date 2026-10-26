@@ -58,14 +58,15 @@
   },
   "platform": {
     "dashboard": "Platform dashboard",
-    "shops": "Shops",
+    "shops": "All shops",
     "users": "Users",
     "audit": "Audit logs",
     "settings": "Settings",
     "health": "System health",
     "suspend": "Suspend",
     "activate": "Activate",
-    "reason": "Reason"
+    "reason": "Reason",
+    "totalShops": "Total shops"
   },
   "onboarding": {
     "title": "Create your shop",

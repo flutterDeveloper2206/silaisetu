@@ -17,7 +17,7 @@ export class PlatformAdminService {
       suspendedShops,
       pendingShops,
       totalUsers,
-      recentShops,
+      shops,
       recentAudits,
     ] = await Promise.all([
       this.prisma.shop.count(),
@@ -27,13 +27,18 @@ export class PlatformAdminService {
       this.prisma.user.count(),
       this.prisma.shop.findMany({
         orderBy: { createdAt: 'desc' },
-        take: 8,
+        take: 200,
         select: {
           id: true,
           name: true,
+          slug: true,
           status: true,
           city: true,
+          phone: true,
           createdAt: true,
+          _count: {
+            select: { memberships: true, customers: true, orders: true },
+          },
         },
       }),
       this.prisma.auditLog.findMany({
@@ -53,7 +58,8 @@ export class PlatformAdminService {
         pendingShops,
         users: totalUsers,
       },
-      recentShops,
+      shops,
+      recentShops: shops.slice(0, 8),
       recentEvents: recentAudits,
     };
   }

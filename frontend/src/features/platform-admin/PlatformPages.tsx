@@ -54,49 +54,131 @@ export function PlatformLoginPage() {
   );
 }
 
+type AdminShopRow = {
+  id: string;
+  name: string;
+  slug?: string;
+  status: string;
+  city?: string | null;
+  phone?: string | null;
+  createdAt: string;
+  _count?: { memberships: number; customers: number; orders: number };
+};
+
 export function PlatformDashboardPage() {
   const { t } = useTranslation();
+  const user = useAuthStore((s) => s.user);
   const [data, setData] = useState<{
     totals: Record<string, number>;
-    recentShops: Array<{ id: string; name: string; status: string; createdAt: string }>;
+    shops?: AdminShopRow[];
+    recentShops: AdminShopRow[];
     recentEvents: Array<{ id: string; action: string; createdAt: string }>;
   } | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api.get('/platform-admin/dashboard')
+    api
+      .get('/platform-admin/dashboard')
       .then((r) => setData(r.data))
-      .catch(() => setError(t('common.error')));
+      .catch((err) => {
+        const msg = getApiErrorMessage(err, t('common.error'));
+        setError(msg);
+        toastError(msg, t('platform.dashboard'));
+      });
   }, [t]);
 
-  if (error) return <div className="state-box">{error}</div>;
+  if (error) {
+    return (
+      <div className="state-box">
+        <p>{error}</p>
+        <button className="btn" type="button" onClick={() => window.location.reload()}>
+          {t('common.retry')}
+        </button>
+      </div>
+    );
+  }
   if (!data) return <div className="state-box">{t('common.loading')}</div>;
+
+  const shops = data.shops?.length ? data.shops : data.recentShops;
 
   return (
     <div>
-      <div className="page-header"><h1>{t('platform.dashboard')}</h1></div>
-      <div className="stat-grid">
-        <div className="stat"><div className="label">Shops</div><div className="value">{data.totals.shops}</div></div>
-        <div className="stat"><div className="label">Active</div><div className="value">{data.totals.activeShops}</div></div>
-        <div className="stat"><div className="label">Suspended</div><div className="value">{data.totals.suspendedShops}</div></div>
-        <div className="stat"><div className="label">Users</div><div className="value">{data.totals.users}</div></div>
-      </div>
-      <div className="panel">
-        <h2>Recent shops</h2>
-        <div className="table-wrap">
-          <table>
-            <thead><tr><th>Name</th><th>Status</th><th>Created</th></tr></thead>
-            <tbody>
-              {data.recentShops.map((s) => (
-                <tr key={s.id}>
-                  <td><Link to={`/platform-admin/shops/${s.id}`}>{s.name}</Link></td>
-                  <td><span className="badge">{s.status}</span></td>
-                  <td>{new Date(s.createdAt).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="page-header">
+        <div>
+          <h1>{t('platform.dashboard')}</h1>
+          <p className="muted" style={{ margin: 0 }}>
+            {user?.fullName || user?.email} · Platform admin
+          </p>
         </div>
+        <Link className="btn" to="/platform-admin/shops">
+          {t('platform.shops')} ({data.totals.shops ?? shops.length})
+        </Link>
+      </div>
+
+      <div className="stat-grid">
+        <div className="stat">
+          <div className="label">Total shops</div>
+          <div className="value">{data.totals.shops ?? shops.length}</div>
+        </div>
+        <div className="stat">
+          <div className="label">Active</div>
+          <div className="value">{data.totals.activeShops ?? 0}</div>
+        </div>
+        <div className="stat">
+          <div className="label">Suspended</div>
+          <div className="value">{data.totals.suspendedShops ?? 0}</div>
+        </div>
+        <div className="stat">
+          <div className="label">Pending</div>
+          <div className="value">{data.totals.pendingShops ?? 0}</div>
+        </div>
+        <div className="stat">
+          <div className="label">Users</div>
+          <div className="value">{data.totals.users ?? 0}</div>
+        </div>
+      </div>
+
+      <div className="panel">
+        <div className="page-header" style={{ marginBottom: 12 }}>
+          <h2 style={{ margin: 0 }}>All shops ({shops.length})</h2>
+        </div>
+        {!shops.length ? (
+          <div className="state-box">{t('common.empty')}</div>
+        ) : (
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>City</th>
+                  <th>Status</th>
+                  <th>Staff</th>
+                  <th>Customers</th>
+                  <th>Orders</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shops.map((s) => (
+                  <tr key={s.id}>
+                    <td>
+                      <Link to={`/platform-admin/shops/${s.id}`}>{s.name}</Link>
+                      {s.slug ? <div className="muted" style={{ fontSize: 12 }}>{s.slug}</div> : null}
+                    </td>
+                    <td>{s.city || '—'}</td>
+                    <td>
+                      <span className="badge">{s.status}</span>
+                    </td>
+                    <td>{s._count?.memberships ?? '—'}</td>
+                    <td>{s._count?.customers ?? '—'}</td>
+                    <td>{s._count?.orders ?? '—'}</td>
+                    <td>{new Date(s.createdAt).toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -104,47 +186,107 @@ export function PlatformDashboardPage() {
 
 export function PlatformShopsPage() {
   const { t } = useTranslation();
-  const [items, setItems] = useState<Array<{ id: string; name: string; status: string; city?: string }>>([]);
+  const [items, setItems] = useState<
+    Array<{
+      id: string;
+      name: string;
+      status: string;
+      city?: string;
+      _count?: { memberships: number; customers: number; orders: number };
+    }>
+  >([]);
+  const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
+  const [error, setError] = useState('');
 
   async function load() {
-    const { data } = await api.get('/platform-admin/shops', {
-      params: { search: search || undefined, status: status || undefined },
-    });
-    setItems(data.items || []);
+    setError('');
+    try {
+      const { data } = await api.get('/platform-admin/shops', {
+        params: {
+          search: search || undefined,
+          status: status || undefined,
+          pageSize: 100,
+        },
+      });
+      setItems(data.items || []);
+      setTotal(data.total ?? data.items?.length ?? 0);
+    } catch (err) {
+      const msg = getApiErrorMessage(err, t('common.error'));
+      setError(msg);
+      toastError(msg, t('platform.shops'));
+    }
   }
 
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    void load();
+  }, []);
 
   return (
     <div>
       <div className="page-header">
-        <h1>{t('platform.shops')}</h1>
+        <h1>
+          {t('platform.shops')}{' '}
+          <span className="muted" style={{ fontSize: '1rem', fontWeight: 500 }}>
+            ({total})
+          </span>
+        </h1>
         <div className="toolbar">
-          <input className="input" style={{ width: 200 }} value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('common.search')} />
-          <select className="select" style={{ width: 160 }} value={status} onChange={(e) => setStatus(e.target.value)}>
+          <input
+            className="input"
+            style={{ width: 200 }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t('common.search')}
+          />
+          <select
+            className="select"
+            style={{ width: 160 }}
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
             <option value="">All</option>
             <option value="ACTIVE">ACTIVE</option>
             <option value="SUSPENDED">SUSPENDED</option>
             <option value="PENDING">PENDING</option>
           </select>
-          <button className="btn" type="button" onClick={() => void load()}>{t('common.search')}</button>
+          <button className="btn" type="button" onClick={() => void load()}>
+            {t('common.search')}
+          </button>
         </div>
       </div>
+      {error ? <div className="state-box">{error}</div> : null}
       <div className="panel table-wrap">
         <table>
-          <thead><tr><th>Name</th><th>City</th><th>Status</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>City</th>
+              <th>Status</th>
+              <th>Staff</th>
+              <th>Customers</th>
+              <th>Orders</th>
+            </tr>
+          </thead>
           <tbody>
             {items.map((s) => (
               <tr key={s.id}>
-                <td><Link to={`/platform-admin/shops/${s.id}`}>{s.name}</Link></td>
+                <td>
+                  <Link to={`/platform-admin/shops/${s.id}`}>{s.name}</Link>
+                </td>
                 <td>{s.city || '—'}</td>
-                <td><span className="badge">{s.status}</span></td>
+                <td>
+                  <span className="badge">{s.status}</span>
+                </td>
+                <td>{s._count?.memberships ?? '—'}</td>
+                <td>{s._count?.customers ?? '—'}</td>
+                <td>{s._count?.orders ?? '—'}</td>
               </tr>
             ))}
           </tbody>
         </table>
+        {!items.length && !error ? <div className="state-box">{t('common.empty')}</div> : null}
       </div>
     </div>
   );
