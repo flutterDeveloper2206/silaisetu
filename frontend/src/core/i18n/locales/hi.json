@@ -62,10 +62,19 @@
     "users": "उपयोगकर्ता",
     "audit": "ऑडिट लॉग",
     "settings": "सेटिंग्स",
+    "subscriptionProofs": "सदस्यता प्रमाण",
     "health": "सिस्टम स्वास्थ्य",
     "suspend": "सस्पेंड",
     "activate": "सक्रिय",
-    "reason": "कारण"
+    "reason": "कारण",
+    "subscription": "सदस्यता",
+    "lifetimeFree": "आजीवन मुफ़्त",
+    "trialEndsAt": "ट्रायल समाप्ति",
+    "subscriptionExpiresAt": "सदस्यता समाप्ति",
+    "approve": "स्वीकृत",
+    "reject": "अस्वीकृत",
+    "saveSettings": "सेटिंग्स सहेजें",
+    "uploadQr": "QR अपलोड"
   },
   "onboarding": {
     "title": "अपनी दुकान बनाएँ",

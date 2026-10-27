@@ -24,27 +24,6 @@ class MeasurementFieldDef {
   final bool custom;
 }
 
-class AddComponentDialogController extends GetxController {
-  final nameCtrl = TextEditingController();
-  final helpCtrl = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  @override
-  void onClose() {
-    nameCtrl.dispose();
-    helpCtrl.dispose();
-    super.onClose();
-  }
-
-  ({String name, String help})? submit() {
-    if (!(formKey.currentState?.validate() ?? false)) return null;
-    return (
-      name: nameCtrl.text.trim(),
-      help: helpCtrl.text.trim(),
-    );
-  }
-}
-
 class MeasurementFormController extends GetxController {
   final api = Get.find<ApiClient>();
 
@@ -241,17 +220,17 @@ class MeasurementFormController extends GetxController {
 
   void selectCategory(String id) {
     final previousValues = <String, String>{};
+    final oldControllers = List<TextEditingController>.from(fields.values);
     for (final e in fields.entries) {
       previousValues[e.key] = e.value.text;
-      e.value.dispose();
     }
-    fields.clear();
-    fieldDefs.clear();
+    final nextFields = <String, TextEditingController>{};
+    final nextDefs = <MeasurementFieldDef>[];
     categoryId.value = id;
     final cat = MeasurementCatalog.byId(id);
     if (cat != null) {
       for (final c in cat.components) {
-        fieldDefs.add(
+        nextDefs.add(
           MeasurementFieldDef(
             id: c.id,
             name: c.name,
@@ -260,9 +239,18 @@ class MeasurementFormController extends GetxController {
             helpText: c.helpText,
           ),
         );
-        fields[c.id] = TextEditingController(text: previousValues[c.id] ?? '');
+        nextFields[c.id] =
+            TextEditingController(text: previousValues[c.id] ?? '');
       }
     }
+    // Swap first so Obx rebuilds with live controllers, then dispose old ones.
+    fields.assignAll(nextFields);
+    fieldDefs.assignAll(nextDefs);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final c in oldControllers) {
+        c.dispose();
+      }
+    });
   }
 
   String _slug(String name) {
@@ -282,29 +270,17 @@ class MeasurementFormController extends GetxController {
 
   Future<void> addComponent(BuildContext context) async {
     final loc = AppLocalizations.of(context)!;
-    const tag = 'add_component_dialog';
-    if (!Get.isRegistered<AddComponentDialogController>(tag: tag)) {
-      Get.lazyPut(
-        () => AddComponentDialogController(),
-        tag: tag,
-        fenix: true,
-      );
-    }
-    // Ensure a live instance exists (fenix recreates after delete).
-    Get.find<AddComponentDialogController>(tag: tag);
     final result = await showDialog<({String name, String help})>(
       context: context,
-      builder: (ctx) => const AddComponentDialog(tag: tag),
+      builder: (ctx) => const AddComponentDialog(),
     );
-    if (Get.isRegistered<AddComponentDialogController>(tag: tag)) {
-      Get.delete<AddComponentDialogController>(tag: tag);
-    }
     if (result == null || result.name.isEmpty) return;
     if (categoryId.value == null) {
       SsSnack.error(loc.selectCategoryFirst, title: loc.measurements);
       return;
     }
     final id = _slug(result.name);
+    fields[id] = TextEditingController();
     fieldDefs.add(
       MeasurementFieldDef(
         id: id,
@@ -313,12 +289,14 @@ class MeasurementFormController extends GetxController {
         custom: true,
       ),
     );
-    fields[id] = TextEditingController();
   }
 
   void removeField(MeasurementFieldDef def) {
-    fields.remove(def.id)?.dispose();
+    final removed = fields.remove(def.id);
     fieldDefs.removeWhere((f) => f.id == def.id);
+    if (removed != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => removed.dispose());
+    }
   }
 
   Future<void> save(BuildContext context) async {
@@ -415,26 +393,48 @@ class MeasurementFormController extends GetxController {
   }
 }
 
-/// Dialog body; controller is put with [tag] + fenix by [MeasurementFormController.addComponent].
-class AddComponentDialog extends StatelessWidget {
-  const AddComponentDialog({super.key, required this.tag});
+/// Owns its own [TextEditingController]s so dispose happens with the route,
+/// not via GetX delete while dependents are still attached.
+class AddComponentDialog extends StatefulWidget {
+  const AddComponentDialog({super.key});
 
-  final String tag;
+  @override
+  State<AddComponentDialog> createState() => _AddComponentDialogState();
+}
+
+class _AddComponentDialogState extends State<AddComponentDialog> {
+  final _nameCtrl = TextEditingController();
+  final _helpCtrl = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _helpCtrl.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    Navigator.of(context).pop((
+      name: _nameCtrl.text.trim(),
+      help: _helpCtrl.text.trim(),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final c = Get.find<AddComponentDialogController>(tag: tag);
     final l = AppLocalizations.of(context)!;
     return AlertDialog(
       title: Text(l.addComponent),
       content: Form(
-        key: c.formKey,
+        key: _formKey,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: c.nameCtrl,
+                controller: _nameCtrl,
                 autofocus: true,
                 decoration: InputDecoration(
                   labelText: l.componentName,
@@ -442,10 +442,11 @@ class AddComponentDialog extends StatelessWidget {
                 ),
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? l.requiredField : null,
+                onFieldSubmitted: (_) => _submit(),
               ),
               const SizedBox(height: SsLayout.item),
               TextFormField(
-                controller: c.helpCtrl,
+                controller: _helpCtrl,
                 decoration: InputDecoration(
                   labelText: l.helpTextOptional,
                 ),
@@ -460,11 +461,7 @@ class AddComponentDialog extends StatelessWidget {
           child: Text(l.cancel),
         ),
         FilledButton(
-          onPressed: () {
-            final result = c.submit();
-            if (result == null) return;
-            Navigator.of(context).pop(result);
-          },
+          onPressed: _submit,
           child: Text(l.save),
         ),
       ],

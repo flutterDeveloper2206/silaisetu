@@ -111,6 +111,15 @@ export class PlatformAdminService {
           },
         },
         statusHistory: { orderBy: { createdAt: 'desc' } },
+        subscriptionProofs: {
+          orderBy: { createdAt: 'desc' },
+          take: 20,
+          include: {
+            submittedBy: {
+              select: { id: true, fullName: true, email: true },
+            },
+          },
+        },
         _count: { select: { customers: true, orders: true } },
       },
     });

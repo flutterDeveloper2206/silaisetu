@@ -12,6 +12,7 @@ import 'features/auth/views/select_shop_view.dart';
 import 'features/auth/views/sign_in_view.dart';
 import 'features/auth/views/sign_up_view.dart';
 import 'features/auth/views/welcome_view.dart';
+import 'features/billing/views/subscription_paywall_view.dart';
 import 'features/calendar/views/calendar_view.dart';
 import 'features/common/views/module_placeholder_view.dart';
 import 'features/customers/views/customers_view.dart';
@@ -101,6 +102,10 @@ class SilaiSetuApp extends StatelessWidget {
             page: () => const OnboardingFlowView(),
           ),
           GetPage(name: '/select-shop', page: () => const SelectShopView()),
+          GetPage(
+            name: '/subscription',
+            page: () => const SubscriptionPaywallView(),
+          ),
           GetPage(name: '/home', page: () => const HomeShell()),
           GetPage(name: '/customers', page: () => const CustomersView()),
           GetPage(name: '/customers/new', page: () => const CustomerFormView()),

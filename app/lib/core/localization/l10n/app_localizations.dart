@@ -838,6 +838,126 @@ abstract class AppLocalizations {
   /// **'Overview'**
   String get overview;
 
+  /// No description provided for @subscriptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription'**
+  String get subscriptionTitle;
+
+  /// No description provided for @subscriptionHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate your shop to continue'**
+  String get subscriptionHeadline;
+
+  /// No description provided for @subscriptionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay ₹{amount} for {days} days of SilaiSetu access. Scan the QR, then submit your UPI transaction ID and payment screenshot for admin approval.'**
+  String subscriptionBody(String amount, String days);
+
+  /// No description provided for @subscriptionUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI ID'**
+  String get subscriptionUpi;
+
+  /// No description provided for @subscriptionTxnId.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI transaction ID'**
+  String get subscriptionTxnId;
+
+  /// No description provided for @subscriptionPickScreenshot.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose payment screenshot'**
+  String get subscriptionPickScreenshot;
+
+  /// No description provided for @subscriptionScreenshotSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshot selected'**
+  String get subscriptionScreenshotSelected;
+
+  /// No description provided for @subscriptionSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for approval'**
+  String get subscriptionSubmit;
+
+  /// No description provided for @subscriptionSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted. We will unlock access after review.'**
+  String get subscriptionSubmitted;
+
+  /// No description provided for @subscriptionPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment proof is awaiting admin approval.'**
+  String get subscriptionPending;
+
+  /// No description provided for @subscriptionQrMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code not configured yet. Contact support.'**
+  String get subscriptionQrMissing;
+
+  /// No description provided for @subscriptionTxnScreenshotRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter transaction ID and choose a screenshot.'**
+  String get subscriptionTxnScreenshotRequired;
+
+  /// No description provided for @subscriptionCheckAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'I paid — check access'**
+  String get subscriptionCheckAccess;
+
+  /// No description provided for @copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get copied;
+
+  /// No description provided for @greetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get greetingMorning;
+
+  /// No description provided for @greetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get greetingAfternoon;
+
+  /// No description provided for @greetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get greetingEvening;
+
+  /// No description provided for @todaysFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s focus'**
+  String get todaysFocus;
+
+  /// No description provided for @workInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Work in progress'**
+  String get workInProgress;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
   /// No description provided for @ordersThisPeriod.
   ///
   /// In en, this message translates to:

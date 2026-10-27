@@ -82,7 +82,9 @@ class SignInView extends StatelessWidget {
                           ui.identifier.text,
                           ui.password.text,
                         );
-                        if (ok) Get.offAllNamed(auth.routeAfterAuth());
+                        if (ok) {
+                          Get.offAllNamed(await auth.routeAfterAuthAsync());
+                        }
                       },
                 child: Text(auth.loading.value ? l.loading : l.signIn),
               ),

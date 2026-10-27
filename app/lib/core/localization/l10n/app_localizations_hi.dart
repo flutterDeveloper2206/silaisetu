@@ -381,6 +381,72 @@ class AppLocalizationsHi extends AppLocalizations {
   String get overview => 'सारांश';
 
   @override
+  String get subscriptionTitle => 'सदस्यता';
+
+  @override
+  String get subscriptionHeadline => 'जारी रखने के लिए दुकान सक्रिय करें';
+
+  @override
+  String subscriptionBody(String amount, String days) {
+    return 'SilaiSetu के लिए ₹$amount से $days दिनों की पहुँच। QR से भुगतान करें, फिर ट्रांज़ैक्शन ID और स्क्रीनशॉट भेजें।';
+  }
+
+  @override
+  String get subscriptionUpi => 'UPI ID';
+
+  @override
+  String get subscriptionTxnId => 'UPI ट्रांज़ैक्शन ID';
+
+  @override
+  String get subscriptionPickScreenshot => 'भुगतान स्क्रीनशॉट चुनें';
+
+  @override
+  String get subscriptionScreenshotSelected => 'स्क्रीनशॉट चुना गया';
+
+  @override
+  String get subscriptionSubmit => 'अनुमोदन के लिए भेजें';
+
+  @override
+  String get subscriptionSubmitted =>
+      'भेजा गया। एडमिन अनुमोदन के बाद पहुँच मिलेगी।';
+
+  @override
+  String get subscriptionPending =>
+      'भुगतान प्रमाण एडमिन अनुमोदन की प्रतीक्षा में है।';
+
+  @override
+  String get subscriptionQrMissing =>
+      'QR अभी सेट नहीं है। सपोर्ट से संपर्क करें।';
+
+  @override
+  String get subscriptionTxnScreenshotRequired =>
+      'ट्रांज़ैक्शन ID और स्क्रीनशॉट ज़रूरी हैं।';
+
+  @override
+  String get subscriptionCheckAccess => 'भुगतान हो गया — पहुँच जाँचें';
+
+  @override
+  String get copied => 'कॉपी हो गया';
+
+  @override
+  String get greetingMorning => 'सुप्रभात';
+
+  @override
+  String get greetingAfternoon => 'नमस्ते';
+
+  @override
+  String get greetingEvening => 'शुभ संध्या';
+
+  @override
+  String get todaysFocus => 'आज का काम';
+
+  @override
+  String get workInProgress => 'चल रहा काम';
+
+  @override
+  String get seeAll => 'सब देखें';
+
+  @override
   String get ordersThisPeriod => 'ऑर्डर';
 
   @override

@@ -7,6 +7,7 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { TenantContextInterceptor } from './common/interceptors/tenant-context.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
+import { BillingModule } from './modules/billing/billing.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { GarmentTemplatesModule } from './modules/garment-templates/garment-templates.module';
 import { HealthModule } from './modules/health/health.module';
@@ -30,6 +31,7 @@ import { TenantsModule } from './modules/tenants/tenants.module';
       },
     ]),
     PrismaModule,
+    BillingModule,
     AuthModule,
     TenantsModule,
     CustomersModule,

@@ -5,6 +5,7 @@ import '../../../core/theme/ss_layout.dart';
 import '../../../core/widgets/ss_debug_fill_button.dart';
 import '../../../core/widgets/ss_page.dart';
 import '../../../core/widgets/ss_widgets.dart';
+import '../../auth/controllers/auth_controller.dart';
 import '../controllers/onboarding_controller.dart';
 
 class OnboardingFlowView extends StatelessWidget {
@@ -108,7 +109,10 @@ class OnboardingFlowView extends StatelessWidget {
                                   } else {
                                     final ok = await c.finish();
                                     if (ok) {
-                                      Get.offAllNamed('/home');
+                                      Get.offAllNamed(
+                                        await Get.find<AuthController>()
+                                            .routeAfterAuthAsync(),
+                                      );
                                       Get.snackbar(l.appName, l.welcomeShop);
                                     }
                                   }

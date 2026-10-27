@@ -65,10 +65,19 @@
     "users": "વપરાશકર્તાઓ",
     "audit": "ઓડિટ લૉગ",
     "settings": "સેટિંગ્સ",
+    "subscriptionProofs": "સબ્સ્ક્રિપ્શન પુરાવા",
     "health": "સિસ્ટમ હેલ્થ",
     "suspend": "સસ્પેન્ડ",
     "activate": "સક્રિય",
-    "reason": "કારણ"
+    "reason": "કારણ",
+    "subscription": "સબ્સ્ક્રિપ્શન",
+    "lifetimeFree": "જીવનભર મફત",
+    "trialEndsAt": "ટ્રાયલ સમાપ્તિ",
+    "subscriptionExpiresAt": "સબ્સ્ક્રિપ્શન સમાપ્તિ",
+    "approve": "મંજૂર",
+    "reject": "નકારો",
+    "saveSettings": "સેટિંગ્સ સાચવો",
+    "uploadQr": "QR અપલોડ"
   },
   "onboarding": {
     "title": "તમારી દુકાન બનાવો",

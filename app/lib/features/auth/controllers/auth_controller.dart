@@ -19,6 +19,10 @@ class AuthController extends GetxController {
       // Fire-and-forget; interceptor must not await the dialog.
       handleSessionExpired();
     };
+    api.onSubscriptionRequired = () {
+      if (Get.currentRoute == '/subscription') return;
+      Get.offAllNamed('/subscription');
+    };
   }
 
   bool get onboardingComplete =>
@@ -253,6 +257,24 @@ class AuthController extends GetxController {
     if (!onboardingComplete) return '/onboarding';
     if (memberships.length > 1) return '/select-shop';
     return '/home';
+  }
+
+  /// After shop context is ready, send unpaid shops to the paywall.
+  Future<String> routeAfterAuthAsync() async {
+    final base = routeAfterAuth();
+    if (base != '/home') return base;
+    try {
+      await ensureShopContext();
+      if (api.shopId == null || api.shopId!.isEmpty) return base;
+      final res = await api.dio.get('/billing/subscription');
+      final data = res.data;
+      if (data is Map && data['required'] == true) {
+        return '/subscription';
+      }
+    } catch (_) {
+      // Offline / API error: let home load; interceptor will gate later.
+    }
+    return base;
   }
 
   Future<void> _persist(Map<String, dynamic> data) async {

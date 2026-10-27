@@ -6,6 +6,7 @@ import { useAuthStore } from '../../core/auth/auth-store';
 const links = [
   ['', 'platform.dashboard'],
   ['shops', 'platform.shops'],
+  ['subscription-proofs', 'platform.subscriptionProofs'],
   ['users', 'platform.users'],
   ['audit-logs', 'platform.audit'],
   ['settings', 'platform.settings'],

@@ -27,6 +27,10 @@ dependencies:
   share_plus: ^12.0.2
   printing: ^5.14.3
 
+dependency_overrides:
+  # image 4.11 needs ZLibDecoder.decodeLazy (archive >= 4.1)
+  archive: ^4.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

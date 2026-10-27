@@ -38,7 +38,7 @@ class SelectShopView extends StatelessWidget {
                   ),
                   onTap: () async {
                     await auth.selectShop('${shop['id']}');
-                    Get.offAllNamed('/home');
+                    Get.offAllNamed(await auth.routeAfterAuthAsync());
                   },
                 ),
               ),

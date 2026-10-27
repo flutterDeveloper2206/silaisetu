@@ -12,6 +12,7 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { requireShopContext } from '../../common/tenant/tenant-context';
+import { SubscriptionService } from '../billing/subscription.service';
 
 function slugify(name: string) {
   return (
@@ -25,7 +26,10 @@ function slugify(name: string) {
 
 @Injectable()
 export class TenantsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly subscription: SubscriptionService,
+  ) {}
 
   async createShop(
     userId: string,
@@ -45,6 +49,8 @@ export class TenantsService {
     let slug = slugify(data.name);
     const exists = await this.prisma.shop.findUnique({ where: { slug } });
     if (exists) slug = `${slug}-${Date.now().toString(36)}`;
+    const config = await this.subscription.getConfig();
+    const trialEndsAt = this.subscription.trialEndsAtFromNow(config.trialDays);
 
     return this.prisma.$transaction(async (tx) => {
       const shop = await tx.shop.create({
@@ -61,6 +67,7 @@ export class TenantsService {
           measurementUnit: data.measurementUnit ?? MeasurementUnit.INCH,
           workingHours: data.workingHours ?? undefined,
           status: ShopStatus.ACTIVE,
+          trialEndsAt,
           settings: { create: {} },
           memberships: {
             create: {

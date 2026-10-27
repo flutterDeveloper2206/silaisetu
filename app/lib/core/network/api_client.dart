@@ -27,6 +27,9 @@ class ApiClient extends GetxService {
   /// Called when session is fully expired (refresh failed / revoked).
   void Function()? onSessionExpired;
 
+  /// Called when shop subscription is required (403 SUBSCRIPTION_REQUIRED).
+  void Function()? onSubscriptionRequired;
+
   bool _handlingExpiry = false;
   Completer<bool>? _refreshCompleter;
 
@@ -129,6 +132,12 @@ class ApiClient extends GetxService {
             }
           }
           if (status == 401) await _emitSessionExpired();
+        }
+
+        if (status == 403 &&
+            code == 'SUBSCRIPTION_REQUIRED' &&
+            !path.contains('/billing/subscription')) {
+          onSubscriptionRequired?.call();
         }
 
         handler.next(err);

@@ -62,11 +62,20 @@
     "users": "Users",
     "audit": "Audit logs",
     "settings": "Settings",
+    "subscriptionProofs": "Subscription proofs",
     "health": "System health",
     "suspend": "Suspend",
     "activate": "Activate",
     "reason": "Reason",
-    "totalShops": "Total shops"
+    "totalShops": "Total shops",
+    "subscription": "Subscription",
+    "lifetimeFree": "Lifetime free",
+    "trialEndsAt": "Trial ends",
+    "subscriptionExpiresAt": "Subscription expires",
+    "approve": "Approve",
+    "reject": "Reject",
+    "saveSettings": "Save settings",
+    "uploadQr": "Upload QR image"
   },
   "onboarding": {
     "title": "Create your shop",

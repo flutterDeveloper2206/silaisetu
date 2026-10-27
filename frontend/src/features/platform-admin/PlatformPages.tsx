@@ -292,6 +292,19 @@ export function PlatformShopsPage() {
   );
 }
 
+function mediaUrl(path?: string | null) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+  const origin = String(apiBase).replace(/\/api\/v1\/?$/, '');
+  return `${origin}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+function toInputDate(value?: string | null) {
+  if (!value) return '';
+  return new Date(value).toISOString().slice(0, 10);
+}
+
 export function PlatformShopDetailPage() {
   const { id } = useParams();
   const { t } = useTranslation();
@@ -299,14 +312,31 @@ export function PlatformShopDetailPage() {
     id: string;
     name: string;
     status: string;
+    subscriptionLifetimeFree?: boolean;
+    trialEndsAt?: string | null;
+    subscriptionExpiresAt?: string | null;
     statusHistory: Array<{ id: string; toStatus: string; reason?: string; createdAt: string }>;
+    subscriptionProofs?: Array<{
+      id: string;
+      status: string;
+      transactionId: string;
+      amountInr: string | number;
+      screenshotUrl: string;
+      createdAt: string;
+    }>;
     _count: { customers: number; orders: number };
   } | null>(null);
   const [reason, setReason] = useState('');
+  const [lifetimeFree, setLifetimeFree] = useState(false);
+  const [trialEndsAt, setTrialEndsAt] = useState('');
+  const [subscriptionExpiresAt, setSubscriptionExpiresAt] = useState('');
 
   async function load() {
     const { data } = await api.get(`/platform-admin/shops/${id}`);
     setShop(data);
+    setLifetimeFree(Boolean(data.subscriptionLifetimeFree));
+    setTrialEndsAt(toInputDate(data.trialEndsAt));
+    setSubscriptionExpiresAt(toInputDate(data.subscriptionExpiresAt));
   }
 
   useEffect(() => { void load(); }, [id]);
@@ -314,6 +344,15 @@ export function PlatformShopDetailPage() {
   async function setStatus(status: 'ACTIVE' | 'SUSPENDED') {
     await api.patch(`/platform-admin/shops/${id}/status`, { status, reason });
     setReason('');
+    await load();
+  }
+
+  async function saveSubscription() {
+    await api.patch(`/platform-admin/shops/${id}/subscription`, {
+      subscriptionLifetimeFree: lifetimeFree,
+      trialEndsAt: trialEndsAt || null,
+      subscriptionExpiresAt: subscriptionExpiresAt || null,
+    });
     await load();
   }
 
@@ -338,6 +377,42 @@ export function PlatformShopDetailPage() {
           <button className="btn danger" type="button" onClick={() => void setStatus('SUSPENDED')}>{t('platform.suspend')}</button>
           <button className="btn" type="button" onClick={() => void setStatus('ACTIVE')}>{t('platform.activate')}</button>
         </div>
+      </div>
+      <div className="panel" style={{ marginBottom: 16 }}>
+        <h2>{t('platform.subscription')}</h2>
+        <label style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+          <input type="checkbox" checked={lifetimeFree} onChange={(e) => setLifetimeFree(e.target.checked)} />
+          {t('platform.lifetimeFree')}
+        </label>
+        <div className="field">
+          <label>{t('platform.trialEndsAt')}</label>
+          <input className="input" type="date" value={trialEndsAt} onChange={(e) => setTrialEndsAt(e.target.value)} />
+        </div>
+        <div className="field">
+          <label>{t('platform.subscriptionExpiresAt')}</label>
+          <input className="input" type="date" value={subscriptionExpiresAt} onChange={(e) => setSubscriptionExpiresAt(e.target.value)} />
+        </div>
+        <button className="btn" type="button" onClick={() => void saveSubscription()}>{t('platform.saveSettings')}</button>
+        {!!shop.subscriptionProofs?.length && (
+          <div className="table-wrap" style={{ marginTop: 16 }}>
+            <table>
+              <thead><tr><th>Txn</th><th>Amount</th><th>Status</th><th>Screenshot</th><th>When</th></tr></thead>
+              <tbody>
+                {shop.subscriptionProofs.map((p) => (
+                  <tr key={p.id}>
+                    <td>{p.transactionId}</td>
+                    <td>₹{p.amountInr}</td>
+                    <td><span className="badge">{p.status}</span></td>
+                    <td>
+                      <a href={mediaUrl(p.screenshotUrl)} target="_blank" rel="noreferrer">View</a>
+                    </td>
+                    <td>{new Date(p.createdAt).toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
       <div className="panel">
         <h2>Status history</h2>
@@ -418,17 +493,214 @@ export function PlatformAuditPage() {
 
 export function PlatformSettingsPage() {
   const { t } = useTranslation();
-  const [items, setItems] = useState<Array<{ key: string; value: unknown }>>([]);
-  useEffect(() => {
-    api.get('/platform-admin/settings').then((r) => setItems(r.data || []));
-  }, []);
+  const [cfg, setCfg] = useState({
+    enabled: false,
+    trialDays: 30,
+    paidDays: 365,
+    amountInr: 2999,
+    upiId: '',
+    qrImageUrl: '',
+    instructions: '',
+  });
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+
+  async function load() {
+    const { data } = await api.get('/platform-admin/subscription-config');
+    setCfg({
+      enabled: Boolean(data.enabled),
+      trialDays: Number(data.trialDays ?? 30),
+      paidDays: Number(data.paidDays ?? 365),
+      amountInr: Number(data.amountInr ?? 2999),
+      upiId: data.upiId || '',
+      qrImageUrl: data.qrImageUrl || '',
+      instructions: data.instructions || '',
+    });
+  }
+
+  useEffect(() => { void load(); }, []);
+
+  async function save(e: FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    setMessage('');
+    try {
+      const { data } = await api.post('/platform-admin/subscription-config', cfg);
+      setCfg(data);
+      setMessage('Saved');
+    } catch (err) {
+      toastError(getApiErrorMessage(err, t('common.error')), t('platform.settings'));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function onQrSelected(file: File | null) {
+    if (!file) return;
+    const form = new FormData();
+    form.append('qr', file);
+    try {
+      const { data } = await api.post('/platform-admin/subscription-config/qr', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setCfg(data);
+      setMessage('QR uploaded');
+    } catch (err) {
+      toastError(getApiErrorMessage(err, t('common.error')), t('platform.uploadQr'));
+    }
+  }
+
   return (
     <div>
       <div className="page-header"><h1>{t('platform.settings')}</h1></div>
-      <div className="panel">
-        {!items.length ? <div className="state-box">{t('common.empty')}</div> : (
-          <ul>{items.map((s) => <li key={s.key}><strong>{s.key}</strong>: {JSON.stringify(s.value)}</li>)}</ul>
-        )}
+      <form className="panel" onSubmit={(e) => void save(e)}>
+        <h2>{t('platform.subscription')}</h2>
+        <label style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+          <input
+            type="checkbox"
+            checked={cfg.enabled}
+            onChange={(e) => setCfg((c) => ({ ...c, enabled: e.target.checked }))}
+          />
+          Enforce subscription (paywall)
+        </label>
+        <div className="field">
+          <label>Trial days</label>
+          <input className="input" type="number" value={cfg.trialDays}
+            onChange={(e) => setCfg((c) => ({ ...c, trialDays: Number(e.target.value) }))} />
+        </div>
+        <div className="field">
+          <label>Paid days (after approve)</label>
+          <input className="input" type="number" value={cfg.paidDays}
+            onChange={(e) => setCfg((c) => ({ ...c, paidDays: Number(e.target.value) }))} />
+        </div>
+        <div className="field">
+          <label>Amount (INR)</label>
+          <input className="input" type="number" value={cfg.amountInr}
+            onChange={(e) => setCfg((c) => ({ ...c, amountInr: Number(e.target.value) }))} />
+        </div>
+        <div className="field">
+          <label>UPI ID</label>
+          <input className="input" value={cfg.upiId}
+            onChange={(e) => setCfg((c) => ({ ...c, upiId: e.target.value }))} />
+        </div>
+        <div className="field">
+          <label>Instructions</label>
+          <textarea className="input" rows={3} value={cfg.instructions}
+            onChange={(e) => setCfg((c) => ({ ...c, instructions: e.target.value }))} />
+        </div>
+        <div className="field">
+          <label>{t('platform.uploadQr')}</label>
+          <input type="file" accept="image/*" onChange={(e) => void onQrSelected(e.target.files?.[0] || null)} />
+          {cfg.qrImageUrl ? (
+            <div style={{ marginTop: 12 }}>
+              <img src={mediaUrl(cfg.qrImageUrl)} alt="Subscription QR" style={{ maxWidth: 220, borderRadius: 12 }} />
+            </div>
+          ) : null}
+        </div>
+        <div className="toolbar">
+          <button className="btn" type="submit" disabled={saving}>{t('platform.saveSettings')}</button>
+          {message ? <span className="muted">{message}</span> : null}
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export function PlatformSubscriptionProofsPage() {
+  const { t } = useTranslation();
+  const [status, setStatus] = useState('PENDING');
+  const [items, setItems] = useState<Array<{
+    id: string;
+    status: string;
+    transactionId: string;
+    amountInr: string | number;
+    screenshotUrl: string;
+    note?: string | null;
+    createdAt: string;
+    shop?: { id: string; name: string };
+    submittedBy?: { fullName: string; email?: string };
+  }>>([]);
+  const [note, setNote] = useState('');
+
+  async function load() {
+    const { data } = await api.get('/platform-admin/subscription-proofs', {
+      params: { status: status || undefined },
+    });
+    setItems(data.items || []);
+  }
+
+  useEffect(() => { void load(); }, [status]);
+
+  async function review(id: string, action: 'approve' | 'reject') {
+    await api.post(`/platform-admin/subscription-proofs/${id}/${action}`, {
+      reviewNote: note || undefined,
+    });
+    setNote('');
+    await load();
+  }
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1>{t('platform.subscriptionProofs')}</h1>
+        <select className="input" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
+          <option value="PENDING">PENDING</option>
+          <option value="APPROVED">APPROVED</option>
+          <option value="REJECTED">REJECTED</option>
+          <option value="">ALL</option>
+        </select>
+      </div>
+      <div className="panel" style={{ marginBottom: 12 }}>
+        <div className="field">
+          <label>Review note (optional)</label>
+          <input className="input" value={note} onChange={(e) => setNote(e.target.value)} />
+        </div>
+      </div>
+      <div className="panel table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Shop</th>
+              <th>Submitted by</th>
+              <th>Txn ID</th>
+              <th>Amount</th>
+              <th>Screenshot</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((p) => (
+              <tr key={p.id}>
+                <td>
+                  {p.shop ? (
+                    <Link to={`/platform-admin/shops/${p.shop.id}`}>{p.shop.name}</Link>
+                  ) : '—'}
+                </td>
+                <td>{p.submittedBy?.fullName || '—'}</td>
+                <td>{p.transactionId}</td>
+                <td>₹{p.amountInr}</td>
+                <td>
+                  <a href={mediaUrl(p.screenshotUrl)} target="_blank" rel="noreferrer">View</a>
+                </td>
+                <td><span className="badge">{p.status}</span></td>
+                <td>
+                  {p.status === 'PENDING' ? (
+                    <div className="toolbar">
+                      <button className="btn" type="button" onClick={() => void review(p.id, 'approve')}>
+                        {t('platform.approve')}
+                      </button>
+                      <button className="btn danger" type="button" onClick={() => void review(p.id, 'reject')}>
+                        {t('platform.reject')}
+                      </button>
+                    </div>
+                  ) : '—'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {!items.length ? <div className="state-box">{t('common.empty')}</div> : null}
       </div>
     </div>
   );

@@ -385,6 +385,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overview => 'Overview';
 
   @override
+  String get subscriptionTitle => 'Subscription';
+
+  @override
+  String get subscriptionHeadline => 'Activate your shop to continue';
+
+  @override
+  String subscriptionBody(String amount, String days) {
+    return 'Pay ₹$amount for $days days of SilaiSetu access. Scan the QR, then submit your UPI transaction ID and payment screenshot for admin approval.';
+  }
+
+  @override
+  String get subscriptionUpi => 'UPI ID';
+
+  @override
+  String get subscriptionTxnId => 'UPI transaction ID';
+
+  @override
+  String get subscriptionPickScreenshot => 'Choose payment screenshot';
+
+  @override
+  String get subscriptionScreenshotSelected => 'Screenshot selected';
+
+  @override
+  String get subscriptionSubmit => 'Submit for approval';
+
+  @override
+  String get subscriptionSubmitted =>
+      'Submitted. We will unlock access after review.';
+
+  @override
+  String get subscriptionPending => 'Payment proof is awaiting admin approval.';
+
+  @override
+  String get subscriptionQrMissing =>
+      'QR code not configured yet. Contact support.';
+
+  @override
+  String get subscriptionTxnScreenshotRequired =>
+      'Enter transaction ID and choose a screenshot.';
+
+  @override
+  String get subscriptionCheckAccess => 'I paid — check access';
+
+  @override
+  String get copied => 'Copied';
+
+  @override
+  String get greetingMorning => 'Good morning';
+
+  @override
+  String get greetingAfternoon => 'Good afternoon';
+
+  @override
+  String get greetingEvening => 'Good evening';
+
+  @override
+  String get todaysFocus => 'Today\'s focus';
+
+  @override
+  String get workInProgress => 'Work in progress';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
   String get ordersThisPeriod => 'Orders';
 
   @override

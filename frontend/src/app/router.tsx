@@ -24,6 +24,7 @@ import {
   PlatformSettingsPage,
   PlatformShopDetailPage,
   PlatformShopsPage,
+  PlatformSubscriptionProofsPage,
   PlatformUsersPage,
 } from '../features/platform-admin/PlatformPages';
 
@@ -76,6 +77,7 @@ export function AppRouter() {
           <Route index element={<PlatformDashboardPage />} />
           <Route path="shops" element={<PlatformShopsPage />} />
           <Route path="shops/:id" element={<PlatformShopDetailPage />} />
+          <Route path="subscription-proofs" element={<PlatformSubscriptionProofsPage />} />
           <Route path="users" element={<PlatformUsersPage />} />
           <Route path="audit-logs" element={<PlatformAuditPage />} />
           <Route path="settings" element={<PlatformSettingsPage />} />

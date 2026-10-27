@@ -289,7 +289,9 @@ class SignUpView extends StatelessWidget {
                               : ui.altPhone.text.trim(),
                           languagePref: lang,
                         );
-                        if (ok) Get.offAllNamed(auth.routeAfterAuth());
+                        if (ok) {
+                          Get.offAllNamed(await auth.routeAfterAuthAsync());
+                        }
                       },
                 child: Text(auth.loading.value ? l.loading : l.createAccount),
               ),

@@ -200,7 +200,9 @@ class VerifyView extends StatelessWidget {
                   ? null
                   : () async {
                       final ok = await auth.confirmVerify(ui.code.text.trim());
-                      if (ok) Get.offAllNamed(auth.routeAfterAuth());
+                      if (ok) {
+                        Get.offAllNamed(await auth.routeAfterAuthAsync());
+                      }
                     },
               child: Text(auth.loading.value ? l.loading : l.continueLabel),
             ),

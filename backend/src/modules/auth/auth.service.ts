@@ -31,6 +31,7 @@ import {
   VerifyOtpDto,
 } from './dto/auth.dto';
 import { JwtPayload } from './auth.types';
+import { SubscriptionService } from '../billing/subscription.service';
 import { normalizePhone, resolveIdentifier } from './phone.util';
 
 @Injectable()
@@ -41,6 +42,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
+    private readonly subscription: SubscriptionService,
   ) {}
 
   private hashToken(token: string) {
@@ -625,6 +627,11 @@ export class AuthService {
       .filter(Boolean)
       .join(', ');
 
+    const subConfig = await this.subscription.getConfig();
+    const trialEndsAt = this.subscription.trialEndsAtFromNow(
+      subConfig.trialDays,
+    );
+
     const shop = await this.prisma.$transaction(async (tx) => {
       const created = await tx.shop.create({
         data: {
@@ -655,6 +662,7 @@ export class AuthService {
           preferences: (dto.preferences || {}) as Prisma.InputJsonValue,
           createIdempotencyKey: dto.idempotencyKey,
           onboardingCompletedAt: new Date(),
+          trialEndsAt,
           settings: {
             create: {
               receiptHeader: dto.receiptHeader,

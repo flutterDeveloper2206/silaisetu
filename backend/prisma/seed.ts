@@ -67,7 +67,7 @@ async function main() {
 
     const shop = await prisma.shop.upsert({
       where: { slug },
-      update: {},
+      update: { subscriptionLifetimeFree: true },
       create: {
         name,
         slug,
@@ -77,6 +77,7 @@ async function main() {
         status: ShopStatus.ACTIVE,
         defaultLanguage: LanguageCode.gu,
         measurementUnit: MeasurementUnit.INCH,
+        subscriptionLifetimeFree: true,
         settings: { create: { receiptFooter: 'Thank you — SilaiSetu' } },
         memberships: {
           create: {
@@ -112,15 +113,28 @@ async function main() {
       },
     });
 
-    const customer = await prisma.customer.create({
-      data: {
-        shopId: shop.id,
-        fullName: 'Ramesh Patel',
-        phone: '9988776655',
-        address: 'Navrangpura',
-        createdById: owner.id,
-      },
+    const orderNumber = `SS-SEED-${slug.toUpperCase()}-00001`;
+    const existingOrder = await prisma.stitchingOrder.findFirst({
+      where: { shopId: shop.id, orderNumber },
+      include: { customer: true },
     });
+    if (existingOrder) {
+      return { shop, owner, customer: existingOrder.customer, order: existingOrder };
+    }
+
+    const customer =
+      (await prisma.customer.findFirst({
+        where: { shopId: shop.id, phone: '9988776655' },
+      })) ||
+      (await prisma.customer.create({
+        data: {
+          shopId: shop.id,
+          fullName: 'Ramesh Patel',
+          phone: '9988776655',
+          address: 'Navrangpura',
+          createdById: owner.id,
+        },
+      }));
 
     const measurement = await prisma.measurementRecord.create({
       data: {
@@ -138,7 +152,7 @@ async function main() {
       data: {
         shopId: shop.id,
         customerId: customer.id,
-        orderNumber: `SS-SEED-${slug.toUpperCase()}-00001`,
+        orderNumber,
         status: OrderStatus.STITCHING,
         deliveryDate: new Date(Date.now() + 5 * 86400000),
         subtotal: 1500,
@@ -223,6 +237,28 @@ async function main() {
       value: { email: 'support@silaisetu.local' },
     },
   });
+
+  const subscriptionDefaults: Array<{ key: string; value: object }> = [
+    { key: 'subscription.enabled', value: { v: false } },
+    { key: 'subscription.trialDays', value: { v: 30 } },
+    { key: 'subscription.paidDays', value: { v: 365 } },
+    { key: 'subscription.amountInr', value: { v: 2999 } },
+    { key: 'subscription.upiId', value: { v: '' } },
+    { key: 'subscription.qrImageUrl', value: { v: '' } },
+    {
+      key: 'subscription.instructions',
+      value: {
+        v: 'Pay via UPI using the QR code, then upload the payment screenshot and enter the UPI transaction ID.',
+      },
+    },
+  ];
+  for (const row of subscriptionDefaults) {
+    await prisma.platformSettings.upsert({
+      where: { key: row.key },
+      update: {},
+      create: row,
+    });
+  }
 
   // eslint-disable-next-line no-console
   console.log('Seed complete');

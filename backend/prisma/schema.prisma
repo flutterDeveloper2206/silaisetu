@@ -1,5 +1,5 @@
 // SilaiSetu — Tailor Management System
-// Multi-tenant schema with shop isolation. Subscriptions deferred.
+// Multi-tenant schema with shop isolation. Manual QR subscription (admin approve).
 
 generator client {
   provider = "prisma-client-js"
@@ -82,7 +82,16 @@ enum AuditAction {
   ADMIN_LOGIN
   ADMIN_ACCESS_DENIED
   MEMBERSHIP_CHANGED
+  SUBSCRIPTION_PROOF_SUBMITTED
+  SUBSCRIPTION_PROOF_APPROVED
+  SUBSCRIPTION_PROOF_REJECTED
   OTHER
+}
+
+enum SubscriptionProofStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model User {
@@ -118,6 +127,8 @@ model User {
   notifications    Notification[]
   statusChanges    OrderStatusHistory[] @relation("StatusChangedBy")
   auditLogs        AuditLog[]     @relation("AuditActor")
+  subscriptionProofsSubmitted SubscriptionPaymentProof[] @relation("SubscriptionProofSubmitter")
+  subscriptionProofsReviewed  SubscriptionPaymentProof[] @relation("SubscriptionProofReviewer")
 
   @@map("users")
 }
@@ -198,6 +209,12 @@ model Shop {
   /// Idempotency key from client finish request
   createIdempotencyKey String? @unique
   onboardingCompletedAt DateTime?
+  /// When true, shop never hits the subscription paywall
+  subscriptionLifetimeFree Boolean @default(false)
+  /// Free trial end (set on shop create from platform settings)
+  trialEndsAt             DateTime?
+  /// Paid access end after admin approves payment proof
+  subscriptionExpiresAt   DateTime?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
@@ -211,10 +228,36 @@ model Shop {
   notifications   Notification[]
   statusHistory   ShopStatusHistory[]
   auditLogs       AuditLog[]
+  subscriptionProofs SubscriptionPaymentProof[]
 
   @@index([status])
   @@index([createdAt])
+  @@index([subscriptionExpiresAt])
   @@map("shops")
+}
+
+model SubscriptionPaymentProof {
+  id            String                   @id @default(uuid()) @db.Uuid
+  shopId        String                   @db.Uuid
+  shop          Shop                     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  submittedById String                   @db.Uuid
+  submittedBy   User                     @relation("SubscriptionProofSubmitter", fields: [submittedById], references: [id], onDelete: Cascade)
+  amountInr     Decimal                  @db.Decimal(12, 2)
+  transactionId String
+  screenshotUrl String
+  note          String?
+  status        SubscriptionProofStatus  @default(PENDING)
+  reviewedById  String?                  @db.Uuid
+  reviewedBy    User?                    @relation("SubscriptionProofReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt    DateTime?
+  reviewNote    String?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+
+  @@index([shopId, status])
+  @@index([status, createdAt])
+  @@index([transactionId])
+  @@map("subscription_payment_proofs")
 }
 
 model ShopMembership {
