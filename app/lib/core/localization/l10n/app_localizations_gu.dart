@@ -384,6 +384,31 @@ class AppLocalizationsGu extends AppLocalizations {
   String get subscriptionTitle => 'સબ્સ્ક્રિપ્શન';
 
   @override
+  String get subscriptionHint => 'પ્લાન સ્થિતિ, QR ચુકવણી અને રિન્યૂ';
+
+  @override
+  String get subscriptionActive => 'તમારી દુકાનની ઍક્સેસ સક્રિય છે';
+
+  @override
+  String get subscriptionLifetimeFreeStatus => 'આ દુકાનને જીવનભર મફત ઍક્સેસ છે';
+
+  @override
+  String subscriptionTrialUntil(String date) {
+    return 'મફત ટ્રાયલ $date સુધી';
+  }
+
+  @override
+  String subscriptionExpiresOn(String date) {
+    return 'પેડ ઍક્સેસ $date સુધી';
+  }
+
+  @override
+  String get subscriptionNotEnforced => 'હમણાં સબ્સ્ક્રિપ્શન જરૂરી નથી';
+
+  @override
+  String get subscriptionRenew => 'રિન્યૂ / હમણાં ચુકવો';
+
+  @override
   String get subscriptionHeadline => 'ચાલુ રાખવા માટે દુકાન સક્રિય કરો';
 
   @override

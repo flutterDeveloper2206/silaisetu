@@ -124,6 +124,19 @@
   "rangePreviousMonth": "पिछला महीना",
   "overview": "सारांश",
   "subscriptionTitle": "सदस्यता",
+  "subscriptionHint": "प्लान स्थिति, QR भुगतान और रिन्यू",
+  "subscriptionActive": "आपकी दुकान की पहुँच सक्रिय है",
+  "subscriptionLifetimeFreeStatus": "इस दुकान को आजीवन मुफ़्त पहुँच है",
+  "subscriptionTrialUntil": "मुफ़्त ट्रायल {date} तक",
+  "@subscriptionTrialUntil": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "subscriptionExpiresOn": "पेड पहुँच {date} तक",
+  "@subscriptionExpiresOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "subscriptionNotEnforced": "अभी सदस्यता आवश्यक नहीं है",
+  "subscriptionRenew": "रिन्यू / अभी भुगतान करें",
   "subscriptionHeadline": "जारी रखने के लिए दुकान सक्रिय करें",
   "subscriptionBody": "SilaiSetu के लिए ₹{amount} से {days} दिनों की पहुँच। QR से भुगतान करें, फिर ट्रांज़ैक्शन ID और स्क्रीनशॉट भेजें।",
   "@subscriptionBody": {

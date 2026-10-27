@@ -59,6 +59,12 @@ class MoreView extends StatelessWidget {
             children: [
               _MenuTile(Icons.storefront_outlined, l.shopSettings,
                   l.shopSettingsHint, '/shop-settings'),
+              _MenuTile(
+                Icons.workspace_premium_outlined,
+                l.subscriptionTitle,
+                l.subscriptionHint,
+                '/subscription',
+              ),
               _MenuTile(Icons.person_outline, l.profile, l.profileHint,
                   '/profile'),
               SsListTile(

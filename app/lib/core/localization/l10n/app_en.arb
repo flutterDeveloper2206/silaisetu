@@ -124,6 +124,19 @@
   "rangePreviousMonth": "Previous month",
   "overview": "Overview",
   "subscriptionTitle": "Subscription",
+  "subscriptionHint": "Plan status, QR payment, and renew access",
+  "subscriptionActive": "Your shop access is active",
+  "subscriptionLifetimeFreeStatus": "This shop has lifetime free access",
+  "subscriptionTrialUntil": "Free trial until {date}",
+  "@subscriptionTrialUntil": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "subscriptionExpiresOn": "Paid access until {date}",
+  "@subscriptionExpiresOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "subscriptionNotEnforced": "Subscription is not required right now",
+  "subscriptionRenew": "Renew / pay now",
   "subscriptionHeadline": "Activate your shop to continue",
   "subscriptionBody": "Pay ₹{amount} for {days} days of SilaiSetu access. Scan the QR, then submit your UPI transaction ID and payment screenshot for admin approval.",
   "@subscriptionBody": {

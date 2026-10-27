@@ -124,6 +124,19 @@
   "rangePreviousMonth": "ગયો મહિનો",
   "overview": "ઝાંખી",
   "subscriptionTitle": "સબ્સ્ક્રિપ્શન",
+  "subscriptionHint": "પ્લાન સ્થિતિ, QR ચુકવણી અને રિન્યૂ",
+  "subscriptionActive": "તમારી દુકાનની ઍક્સેસ સક્રિય છે",
+  "subscriptionLifetimeFreeStatus": "આ દુકાનને જીવનભર મફત ઍક્સેસ છે",
+  "subscriptionTrialUntil": "મફત ટ્રાયલ {date} સુધી",
+  "@subscriptionTrialUntil": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "subscriptionExpiresOn": "પેડ ઍક્સેસ {date} સુધી",
+  "@subscriptionExpiresOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "subscriptionNotEnforced": "હમણાં સબ્સ્ક્રિપ્શન જરૂરી નથી",
+  "subscriptionRenew": "રિન્યૂ / હમણાં ચુકવો",
   "subscriptionHeadline": "ચાલુ રાખવા માટે દુકાન સક્રિય કરો",
   "subscriptionBody": "SilaiSetu માટે ₹{amount} થી {days} દિવસની ઍક્સેસ. QR સ્કેન કરી ચુકવણી કરો, પછી ટ્રાન્ઝેક્શન ID અને સ્ક્રીનશૉટ મોકલો.",
   "@subscriptionBody": {

@@ -384,6 +384,32 @@ class AppLocalizationsHi extends AppLocalizations {
   String get subscriptionTitle => 'सदस्यता';
 
   @override
+  String get subscriptionHint => 'प्लान स्थिति, QR भुगतान और रिन्यू';
+
+  @override
+  String get subscriptionActive => 'आपकी दुकान की पहुँच सक्रिय है';
+
+  @override
+  String get subscriptionLifetimeFreeStatus =>
+      'इस दुकान को आजीवन मुफ़्त पहुँच है';
+
+  @override
+  String subscriptionTrialUntil(String date) {
+    return 'मुफ़्त ट्रायल $date तक';
+  }
+
+  @override
+  String subscriptionExpiresOn(String date) {
+    return 'पेड पहुँच $date तक';
+  }
+
+  @override
+  String get subscriptionNotEnforced => 'अभी सदस्यता आवश्यक नहीं है';
+
+  @override
+  String get subscriptionRenew => 'रिन्यू / अभी भुगतान करें';
+
+  @override
   String get subscriptionHeadline => 'जारी रखने के लिए दुकान सक्रिय करें';
 
   @override

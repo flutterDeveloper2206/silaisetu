@@ -388,6 +388,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionTitle => 'Subscription';
 
   @override
+  String get subscriptionHint => 'Plan status, QR payment, and renew access';
+
+  @override
+  String get subscriptionActive => 'Your shop access is active';
+
+  @override
+  String get subscriptionLifetimeFreeStatus =>
+      'This shop has lifetime free access';
+
+  @override
+  String subscriptionTrialUntil(String date) {
+    return 'Free trial until $date';
+  }
+
+  @override
+  String subscriptionExpiresOn(String date) {
+    return 'Paid access until $date';
+  }
+
+  @override
+  String get subscriptionNotEnforced =>
+      'Subscription is not required right now';
+
+  @override
+  String get subscriptionRenew => 'Renew / pay now';
+
+  @override
   String get subscriptionHeadline => 'Activate your shop to continue';
 
   @override

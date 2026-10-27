@@ -14,9 +14,21 @@ class SubscriptionController extends GetxController {
   final note = ''.obs;
   final screenshotPath = RxnString();
 
+  final showPayForm = false.obs;
+
   bool get required => status.value?['required'] == true;
   bool get pending => status.value?['pendingProof'] != null;
+  bool get allowed => status.value?['allowed'] == true;
+  bool get enabled => status.value?['enabled'] == true;
+  bool get lifetimeFree => status.value?['lifetimeFree'] == true;
   Map? get config => status.value?['config'] as Map?;
+
+  String? get trialEndsAt => status.value?['trialEndsAt']?.toString();
+  String? get subscriptionExpiresAt =>
+      status.value?['subscriptionExpiresAt']?.toString();
+
+  void openPayForm() => showPayForm.value = true;
+  void closePayForm() => showPayForm.value = false;
 
   @override
   void onInit() {

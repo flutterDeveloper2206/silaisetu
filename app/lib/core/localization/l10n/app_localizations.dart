@@ -844,6 +844,48 @@ abstract class AppLocalizations {
   /// **'Subscription'**
   String get subscriptionTitle;
 
+  /// No description provided for @subscriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan status, QR payment, and renew access'**
+  String get subscriptionHint;
+
+  /// No description provided for @subscriptionActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shop access is active'**
+  String get subscriptionActive;
+
+  /// No description provided for @subscriptionLifetimeFreeStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'This shop has lifetime free access'**
+  String get subscriptionLifetimeFreeStatus;
+
+  /// No description provided for @subscriptionTrialUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Free trial until {date}'**
+  String subscriptionTrialUntil(String date);
+
+  /// No description provided for @subscriptionExpiresOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid access until {date}'**
+  String subscriptionExpiresOn(String date);
+
+  /// No description provided for @subscriptionNotEnforced.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription is not required right now'**
+  String get subscriptionNotEnforced;
+
+  /// No description provided for @subscriptionRenew.
+  ///
+  /// In en, this message translates to:
+  /// **'Renew / pay now'**
+  String get subscriptionRenew;
+
   /// No description provided for @subscriptionHeadline.
   ///
   /// In en, this message translates to:
